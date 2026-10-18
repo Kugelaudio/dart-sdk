@@ -103,4 +103,40 @@ void main() {
     expect(response.sampleRate, 8000);
     expect(parseWav(response.toWav()).data, [1, 2, 3, 4]);
   });
+
+  // The final frame counts total_samples at the model's native 24 kHz, also
+  // when the output is resampled (sampleRate 16000, ulaw_8000): the received
+  // audio, not that count, is the response's length.
+  test('AudioResponse.fromChunks counts samples at the output rate', () {
+    GenerationStats nativeStats(int seconds) => GenerationStats.fromJson({
+          'final': true,
+          'chunks': 1,
+          'total_samples': 24000 * seconds,
+          'dur_ms': 1000.0 * seconds,
+          'gen_ms': 100,
+          'rtf': 0.1,
+        });
+
+    final pcm16k = AudioResponse.fromChunks([
+      AudioChunk(
+          audio: Uint8List(16000 * 2),
+          index: 0,
+          sampleRate: 16000,
+          samples: 16000),
+    ], stats: nativeStats(1));
+    expect(pcm16k.samples, 16000);
+    expect(pcm16k.duration, const Duration(seconds: 1));
+    expect(pcm16k.durationMs, 1000);
+
+    final ulaw = AudioResponse.fromChunks([
+      AudioChunk(
+          audio: Uint8List(8000 * 2),
+          index: 0,
+          sampleRate: 8000,
+          samples: 16000,
+          encoding: AudioEncoding.mulaw),
+    ], stats: nativeStats(2));
+    expect(ulaw.samples, 16000);
+    expect(ulaw.duration, const Duration(seconds: 2));
+  });
 }

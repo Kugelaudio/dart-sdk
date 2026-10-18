@@ -243,7 +243,8 @@ class GenerationStats {
   /// Chunks generated.
   final int chunks;
 
-  /// Samples generated.
+  /// Samples generated, counted at the model's native rate (24 kHz) even
+  /// when the output was resampled; use [durationMs] for the length.
   final int totalSamples;
 
   /// Audio duration in milliseconds.
@@ -294,8 +295,9 @@ class AudioResponse {
     return AudioResponse(
       audio: audio,
       sampleRate: chunks.isEmpty ? fallbackSampleRate : chunks.first.sampleRate,
-      samples: stats?.totalSamples ??
-          audio.length ~/ AudioEncoding.bytesPerSample(encoding),
+      // Counted from the audio itself: the final frame's total_samples is at
+      // the model's native rate, not the (possibly resampled) output rate.
+      samples: audio.length ~/ AudioEncoding.bytesPerSample(encoding),
       encoding: encoding,
       generationMs: stats?.generationMs,
       rtf: stats?.rtf,
