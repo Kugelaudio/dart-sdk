@@ -1,3 +1,5 @@
+## [kugelaudio-dart-sdk-v0.1.1](https://github.com/Kugelaudio/KugelAudio/compare/dart-sdk-v0.1.0...dart-sdk-v0.1.1) (2026-10-18)
+
 # Changelog
 
 ## Unreleased
