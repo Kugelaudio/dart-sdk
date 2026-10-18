@@ -1,0 +1,28 @@
+name: test
+
+# Runs on the public mirror github.com/Kugelaudio/dart-sdk on pushes and pull
+# requests. No secrets: the live tests need an API key and are excluded.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dart-lang/setup-dart@v1.8.1
+        with:
+          sdk: stable
+      - run: dart pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: dart analyze --fatal-infos
+      - run: dart test -x live
+      - run: dart test -x live -p chrome
+      - run: dart pub publish --dry-run

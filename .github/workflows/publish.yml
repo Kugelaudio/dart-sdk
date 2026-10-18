@@ -1,0 +1,36 @@
+# Publishes a tagged version to pub.dev with automated publishing (GitHub OIDC).
+#
+# Runs on the public mirror (github.com/Kugelaudio/dart-sdk), where the monorepo's
+# release pushes a `v<version>` tag. pub.dev only accepts this after the package's
+# first version was published by hand and Admin -> Automated publishing names this
+# repository with the tag pattern `v{{version}}`.
+name: publish
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
+      - run: dart pub get
+      - name: Publish unless this version is already on pub.dev
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          status=$(curl -s -o /dev/null -w '%{http_code}' "https://pub.dev/api/packages/kugelaudio/versions/${version}")
+          case "$status" in
+            200) echo "kugelaudio ${version} is already on pub.dev"; exit 0 ;;
+            404) dart pub publish --force ;;
+            *) echo "pub.dev answered HTTP ${status} for kugelaudio ${version}" >&2; exit 1 ;;
+          esac

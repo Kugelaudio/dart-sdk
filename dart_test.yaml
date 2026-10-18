@@ -1,0 +1,4 @@
+tags:
+  live:
+    # Needs KUGELAUDIO_API_KEY; CI runs `dart test -x live`.
+    timeout: 2x
