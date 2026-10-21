@@ -32,8 +32,10 @@ void main() {
     });
 
     test('defaults are actionable', () {
-      expect(AuthenticationException().message, contains('settings/api-keys'));
-      expect(InsufficientCreditsException().message, contains('billing'));
+      expect(AuthenticationException().message,
+          contains('www.kugelaudio.com/dashboard'));
+      expect(InsufficientCreditsException().message,
+          contains('www.kugelaudio.com/dashboard'));
       expect(
           RateLimitException(null, null, null, null, const Duration(seconds: 7))
               .message,

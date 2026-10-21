@@ -15,7 +15,7 @@ dart pub add kugelaudio      # Dart
 flutter pub add kugelaudio   # Flutter
 ```
 
-Get an API key in the [dashboard](https://app.kugelaudio.com/settings/api-keys).
+Get an API key in the [dashboard](https://www.kugelaudio.com/dashboard).
 
 ## Quickstart
 

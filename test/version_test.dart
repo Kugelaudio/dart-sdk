@@ -15,7 +15,10 @@ void main() {
   });
 
   test('CHANGELOG.md has an entry for this version', () {
-    expect(File('CHANGELOG.md').readAsStringSync(),
-        contains('## $packageVersion'));
+    // The release writes `## [kugelaudio-dart-sdk-v<version>](<compare url>) (<date>)`.
+    final entry = RegExp(
+        '^## (\\[kugelaudio-dart-sdk-v)?${RegExp.escape(packageVersion)}\\b',
+        multiLine: true);
+    expect(File('CHANGELOG.md').readAsStringSync(), matches(entry));
   });
 }

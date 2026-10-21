@@ -12,10 +12,10 @@ const String euApiUrl = 'https://api.eu.kugelaudio.com';
 const String defaultModelId = 'kugel-3.5';
 
 /// Where an API key is created or rotated, quoted in authentication errors.
-const String apiKeysUrl = 'https://app.kugelaudio.com/settings/api-keys';
+const String apiKeysUrl = 'https://www.kugelaudio.com/dashboard';
 
 /// Where credits are topped up, quoted in insufficient-credit errors.
-const String billingUrl = 'https://app.kugelaudio.com/billing';
+const String billingUrl = 'https://www.kugelaudio.com/dashboard';
 
 /// A deployment region hint.
 ///
